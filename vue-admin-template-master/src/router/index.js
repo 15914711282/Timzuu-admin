@@ -1,11 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
 Vue.use(Router)
 
 /* Layout */
 import Layout from '@/layout'
-
+/* Router Modules */
+// import tableRouter from './modules/table'
 /**
  * Note: sub-menu only appear when route children.length >= 1
  * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
@@ -24,7 +24,6 @@ import Layout from '@/layout'
     activeMenu: '/example/list'  if set path, the sidebar will highlight the path you set
   }
  */
-
 /**
  * constantRoutes
  * a base page that does not have permission requirements
@@ -54,7 +53,7 @@ export const constantRoutes = [
       meta: { title: 'Dashboard', icon: 'dashboard' }
     }]
   },
-  { 
+  {
     path: '/example',
     component: Layout,
     redirect: '/example/table',
@@ -87,7 +86,6 @@ export const constantRoutes = [
       }
     ]
   },
-
   {
     path: '/form',
     component: Layout,
@@ -100,7 +98,6 @@ export const constantRoutes = [
       }
     ]
   },
-
   {
     path: '/nested',
     component: Layout,
@@ -159,7 +156,6 @@ export const constantRoutes = [
       }
     ]
   },
-
   {
     path: 'external-link',
     component: Layout,
@@ -170,11 +166,52 @@ export const constantRoutes = [
       }
     ]
   },
-
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
-
+export const asyncRoutes = [
+  {
+    path: '/permission',
+    component: Layout,
+    redirect: '/permission/page',
+    alwaysShow: true, // will always show the root menu
+    name: 'Permission',
+    meta: {
+      title: 'Permission',
+      icon: 'lock',
+      roles: ['admin','editor'] // you can set roles in root nav
+    },
+    children: [
+      {
+        path: 'page',
+        component: () => import('@/views/permission/page'),
+        name: 'PagePermission',
+        meta: {
+          title: 'Page Permission',
+          roles: ['admin'] // or you can only set roles in sub nav
+        }
+      },
+      {
+        path: 'directive',
+        component: () => import('@/views/permission/directive'),
+        name: 'DirectivePermission',
+        meta: {
+          title: 'Directive Permission'
+          // if do not set roles, means: this page does not require permission
+        }
+      },
+      {
+        path: 'role',
+        component: () => import('@/views/permission/role'),
+        name: 'RolePermission',
+        meta: {
+          title: 'Role Permission',
+          roles: ['admin']
+        }
+      }
+    ]
+  },
+]
 const createRouter = () => new Router({
   // mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
